@@ -13,7 +13,7 @@ const Todo = (props) => {
   const [text, setText] = useState(props.text ? props.text : 'test');
 
   return (
-      <Text style={styles.text}>test</Text>
+      <Text style={styles.text}>{text}</Text>
   );
 }
 
