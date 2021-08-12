@@ -1,50 +1,46 @@
 import React, {useState} from 'react';
-import Todo from './components/Todo';
 import {
-  Alert,
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-  Button,
+  SafeAreaView, View,Text
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const App = () => {
-  const [todos, setTodos] = useState([<Todo key="alskjdf" />]);
-  
-  function addNewTodo() {
-    todos.push(<Todo key={todos.length} text="test" />);  }
 
+function HomeScreen() {
   return (
-    <SafeAreaView style={styles.root}>
-      <Button onPress={addNewTodo} title='+' style={styles.button}></Button>
-      {todos.forEach((todo) => {
-        return (
-          todo
-        );
-      })}
-    </SafeAreaView>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+    </View>
   );
-};  
+}
 
+const Stack = createNativeStackNavigator();
 
-const styles = StyleSheet.create({
-  root: {
-    backgroundColor: '#f0ffff',
-    flex:1
-  },  
-  button: {
-    position: 'absolute',
-    top: 50,
-    marginTop: 100, 
-    bottom: 0,
-    right: 0,
-  },  
-  text: {
-    fontSize: 25,    
-  },
-});
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} /> 
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+// const styles = StyleSheet.create({
+//   root: {
+//     backgroundColor: '#f0ffff',
+//     flex:1
+//   },  
+//   button: {
+//     position: 'absolute',
+//     top: 50,
+//     marginTop: 100, 
+//     bottom: 0,
+//     right: 0,
+//   },  
+//   text: {
+//     fontSize: 25,    
+//   },
+// });
 
 export default App;
