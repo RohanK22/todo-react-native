@@ -1,27 +1,19 @@
 import React, {useState} from 'react';
 
 import {
-  StyleSheet,
-  Image,
-  SafeAreaView,
   Text,
-  View,
-  TextInput,
+  View
 } from 'react-native';
 
 const Todo = (props) => {
   const [text, setText] = useState(props.text ? props.text : 'test');
-
+  const [isCompleted, setIsCompleted] = useState(props.isCompleted ? props.isCompleted : false);
+  
   return (
-      <Text style={styles.text}>{text}</Text>
+    <View style={{ }}>
+      <Text>{text} is {isCompleted ? 'completed' : 'not completed'}</Text>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 25,    
-  },
-});
-
 
 export default Todo;
