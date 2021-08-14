@@ -22,7 +22,7 @@ class List extends Component {
     
     render(){
         const todoComponents = this.state.todos.map((todo, i) => {
-            return <Todo text={todo.text} isCompleted={todo.isCompleted} />
+            return <Todo key={i} text={todo.text} isCompleted={todo.isCompleted} />
         });
 
         return (
