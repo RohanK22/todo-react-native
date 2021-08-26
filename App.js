@@ -71,7 +71,7 @@ function HomeScreen({navigation}) {
         title="Go to Details"
         onPress={() =>
           navigation.navigate('SampleList', {
-            list: defaultList,
+            list: listToLoad,
           })
         }
       />
@@ -95,7 +95,8 @@ function App() {
         setLists(lists);
 
         // For now show the default list
-        listToLoad = lists[0];
+        listToLoad = await retrieveDataByKey('@' + lists[0]);
+        
       } else {
         // If no pre existing data is found
         await storeDataByKey('@defaultList', defaultList);
@@ -128,6 +129,10 @@ function App() {
 
   useEffect(() => {
     readData();
+  }, []);
+
+  useEffect((lists) => {
+    saveData();
   }, []);
 
   return (
