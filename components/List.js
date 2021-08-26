@@ -7,24 +7,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 class List extends Component {
     constructor(props) {
         super(props);
-        const { itemId, otherParam } = route.params;
-        this.state = {
-            todos: [
-                {
-                    text: 'Wash dishes',
-                    isCompleted: false,
-                },
-                {
-                    text: 'Take out trash',
-                    isCompleted: false,
-                },
-                {
-                    text: 'Get Veggies',
-                    isCompleted: false,
-                }
-            ],
-            textInputValue: '',
-        };
+        const { list } = this.props.route.params;
+        console.log(JSON.stringify(list));
+        this.state = list;
         this.onChangeInput = this.onChangeInput.bind(this);
         this.addTodo = this.addTodo.bind(this);
         this.deleteTodo = this.deleteTodo.bind(this);

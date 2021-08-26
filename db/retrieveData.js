@@ -1,14 +1,15 @@
-import {AsyncStorage} from '@react-native-community/async-storage';
+import AsyncStorage from "@react-native-community/async-storage";
 
 const retrieveDataByKey = async (key) => {
   try {
-    const data = await AsyncStorage.getItem(key);
+    let data = await AsyncStorage.getItem(key);
+    data = data != null ? JSON.parse(data) : null;
     if (data !== null) {
       console.log(data);
     }
     return data;
   } catch (error) {
-    console.log('Error fetching stored data');
+    console.log('Error fetching stored data: ' + error);
   }
 };
 
