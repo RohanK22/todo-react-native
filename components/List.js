@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 class List extends Component {
     constructor(props) {
         super(props);
+        const { itemId, otherParam } = route.params;
         this.state = {
             todos: [
                 {
@@ -26,6 +27,7 @@ class List extends Component {
         };
         this.onChangeInput = this.onChangeInput.bind(this);
         this.addTodo = this.addTodo.bind(this);
+        this.deleteTodo = this.deleteTodo.bind(this);
     }
 
     onChangeInput(text) {
@@ -46,10 +48,19 @@ class List extends Component {
             });
         }
     }
+
+    deleteTodo(todoTextToRemove ) {
+        if(!todoTextToRemove || !this.state.todos) return;
+        const updatedList = this.state.todos.filter((todo) => todo.text !== todoTextToRemove);
+        console.log(updatedList);
+        this.setState({
+            todos: updatedList,
+        });
+    }
     
     render(){
         const todoComponents = this.state.todos.map((todo, i) => {
-            return <Todo key={i} text={todo.text} isCompleted={todo.isCompleted} />
+            return <Todo key={i} text={todo.text} isCompleted={todo.isCompleted} deleteTodo={this.deleteTodo}/>
         });
 
         return (

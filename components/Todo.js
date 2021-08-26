@@ -17,7 +17,7 @@ const Todo = (props) => {
 
   return (
     <View style={isCompleted? styles.todoViewCompleted: styles.todoView}>
-      <Text style={isCompleted? styles.todoTextCompleted: styles.todoText} onPress={changeTodoCompletedStatus}>{text}</Text>
+      <Text style={isCompleted? styles.todoTextCompleted: styles.todoText} onPress={changeTodoCompletedStatus} onLongPress={() => props.deleteTodo(text)}>{text}</Text>
     </View>
   );
 }
