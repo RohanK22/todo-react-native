@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import retrieveDataByKey from '../db/retrieveData';
 
 class ListsView extends Component {
@@ -18,15 +18,31 @@ class ListsView extends Component {
   }
   render() {
     let cards = null;
-    console.log('***********************' + this.state.lists);
     if (this.state.lists && this.state.lists.data) {
       console.log(this.state.lists.data);
       cards = this.state.lists.data.map((element, i) => {
-        return <Text key={i}>{element}</Text>;
+        return <Text key={i} style={styles.listView}>{element}</Text>;
       });
     }
-    return <View>{cards != null ? cards : <Text>"Error"</Text>}</View>;
+    return <View style={styles.container}>{cards != null ? cards : <Text>"Error"</Text>}</View>;
   }
 }
+
+const styles = StyleSheet.create({
+    listView: {
+        backgroundColor: 'powderblue',
+        color: 'white',
+        height: 150,
+        flex: 0.5,
+        margin: 20,
+        textAlign:'center',
+        textAlignVertical: 'center',
+        borderRadius: 20,
+        fontSize: 20,
+    },
+    container: {
+        flexDirection:'row',
+    }
+});
 
 export default ListsView;

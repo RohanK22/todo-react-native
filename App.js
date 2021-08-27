@@ -118,7 +118,7 @@ class App extends Component {
           <Stack.Screen
             name="ListView"
           >
-            {props => <ListView lists={this.state.lists} />}
+            {() => <ListView lists={this.state.lists} />}
           </Stack.Screen>
           <Stack.Screen name="SampleList" component={List} />
         </Stack.Navigator>
