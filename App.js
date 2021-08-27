@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import {SafeAreaView, View, Text, Button, Alert} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -6,7 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ListView from './components/ListsView';
 import List from './components/List';
 
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from '@react-native-community/async-storage';
 import retrieveDataByKey from './db/retrieveData';
 import storeDataByKey from './db/storeData';
 
@@ -29,39 +29,6 @@ const defaultList = {
   ],
   textInputValue: '',
 };
-// retrieveDataByKey('@LISTS', keysToLists => {
-//   if (!keysToLists) {
-//     // New user
-//     const defaultList = {
-//       title: 'Sample List',
-//       todos: [
-//         {
-//           text: 'Wash dishes',
-//           isCompleted: false,
-//         },
-//         {
-//           text: 'Take out trash',
-//           isCompleted: false,
-//         },
-//         {
-//           text: 'Get Veggies',
-//           isCompleted: false,
-//         },
-//       ],
-//       textInputValue: '',
-//     };
-//     storeDataByKey('defaultList', defaultList);
-//     storeDataByKey('@LISTS', ['defaultList']);
-//     listToLoad = defaultList;
-//     console.log('New user: ' + listToLoad);
-//   } else {
-//     // Do something else
-//     console.log('test');
-//     listToLoad = {};
-//     listToLoad = retrieveDataByKey('activeList');
-//   }
-// });
-// console.log(listToLoad);
 
 function HomeScreen({navigation}) {
   return (
@@ -80,86 +47,88 @@ function HomeScreen({navigation}) {
 }
 
 const Stack = createNativeStackNavigator();
+const STORAGE_KEY = '@LISTS';
 
-function App() {
+class App extends Component {
   // Load data on App load
-  const STORAGE_KEY = '@LISTS';
-  const [lists, setLists] = useState([]);
 
-  const readData = async () => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lists: null,
+    };
+  }
+
+  readData = async () => {
     try {
-      const lists = await retrieveDataByKey(STORAGE_KEY);
-
-      if (lists !== null) {
-        console.log(lists);
-        setLists(lists);
-
-        // For now show the default list
-        listToLoad = await retrieveDataByKey('@' + lists[0]);
-        
-      } else {
-        // If no pre existing data is found
+      const listKeys = await retrieveDataByKey(STORAGE_KEY); // Should give back { data: ['defaultList']}
+      if (listKeys === null) {
+        // No previously stored data or new user
+        // Add defaultList to lists and memory
+        const defaultListsObjWithArr = {data: ['defaultList']};
+        await storeDataByKey(STORAGE_KEY, defaultListsObjWithArr);
         await storeDataByKey('@defaultList', defaultList);
-        await storeDataByKey('@LISTS', ['defaultList']);
-        listToLoad = defaultList;
-        console.log('New user: ' + JSON.stringify(listToLoad));
+        this.setState({
+          lists: defaultListsObjWithArr,
+        });
+        console.log('New User: ' + JSON.stringify(this.state.lists));
+      } else {
+        this.setState({
+          lists: listKeys, // Obj
+        });
+        console.log('Existing User: ' + JSON.stringify(listKeys));
       }
     } catch (e) {
-      alert('Failed to fetch the data from storage');
+      console.log('Failed to fetch the data from storage: ' + e);
     }
   };
 
-  const saveData = async () => {
+  saveData = async () => {
     try {
-      await storeDataByKey(STORAGE_KEY, lists);
-      alert('Data successfully saved');
+      await storeDataByKey(STORAGE_KEY, this.state.lists);
+      // console.log('Data successfully saved');
     } catch (e) {
-      alert('Failed to save the data to the storage');
+      console.log('Failed to save the data to the storage: ' + e);
     }
   };
 
-  const clearStorage = async () => {
+  clearStorage = async () => {
     try {
       await AsyncStorage.clear();
-      alert('Storage successfully cleared!');
+      console.log('Storage successfully cleared!');
     } catch (e) {
-      alert('Failed to clear the async storage: ' + e);
+      console.log('Failed to clear the async storage: ' + e);
     }
   };
 
-  useEffect(() => {
-    readData();
-  }, []);
+  async componentWillUnmount() {
 
-  useEffect((lists) => {
-    saveData();
-  }, []);
+  }
+  
+  async componentDidMount() {
+    await this.clearStorage();
+    await this.readData();
+  }
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="SampleList" component={List} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  render() {
+    console.log('Render Called');
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="ListView"
+          >
+            {props => <ListView lists={this.state.lists} />}
+          </Stack.Screen>
+          <Stack.Screen name="SampleList" component={List} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 }
 
-// const styles = StyleSheet.create({
-//   root: {
-//     backgroundColor: '#f0ffff',
-//     flex:1
-//   },
-//   button: {
-//     position: 'absolute',
-//     top: 50,
-//     marginTop: 100,
-//     bottom: 0,
-//     right: 0,
-//   },
-//   text: {
-//     fontSize: 25,
-//   },
-// });
+function createListView(lists) {
+  return (<ListView lists={lists}/>);
+}
 
 export default App;
