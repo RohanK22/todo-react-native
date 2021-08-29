@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import storeDataByKey from '../db/storeData';
 import {
   Alert,
   ScrollView,
@@ -21,6 +22,7 @@ class List extends Component {
     this.onChangeInput = this.onChangeInput.bind(this);
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.changeTodoState = this.changeTodoState.bind(this);
   }
 
   onChangeInput(text) {
@@ -40,6 +42,7 @@ class List extends Component {
         textInputValue: '',
       });
     }
+    // await storeDataByKey('@' + this.state.list.title, this.state.list);
   }
 
   deleteTodo(todoTextToRemove) {
@@ -51,6 +54,29 @@ class List extends Component {
     this.setState({
       todos: updatedList,
     });
+    // await storeDataByKey('@' + this.state.list.title, this.state.list);
+  }
+
+  changeTodoState(todoText) {
+    if (!todoText || !this.state.todos) return;
+    let updatedList = [];
+    
+    for(num in this.state.todos){
+      let i = this.state.todos[num];
+      console.log(JSON.stringify(i));
+      if(i.text === todoText) {
+        i.isCompleted = !i.isCompleted;
+        updatedList.push(i);
+        continue; 
+      }
+      updatedList.push(i);
+    }
+
+    console.log("Changing todos to : " + updatedList);
+    this.setState({
+      todos: updatedList,
+    });
+    // await storeDataByKey('@' + this.state.list.title, this.state.list);
   }
 
   render() {
@@ -60,6 +86,7 @@ class List extends Component {
           <Text>Todo Not Found! </Text>
         </View>
       );
+
     const todoComponents = this.state.todos.map((todo, i) => {
       return (
         <Todo
@@ -67,9 +94,12 @@ class List extends Component {
           text={todo.text}
           isCompleted={todo.isCompleted}
           deleteTodo={this.deleteTodo}
+          changeTodoState={this.changeTodoState}
         />
       );
     });
+    
+    storeDataByKey('@' + this.state.title, this.state);
 
     return (
       <ScrollView>

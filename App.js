@@ -3,16 +3,18 @@ import {SafeAreaView, View, Text, Button, Alert} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import ListView from './components/ListsView';
 import List from './components/List';
+import ListView from './components/ListsView';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import retrieveDataByKey from './db/retrieveData';
 import storeDataByKey from './db/storeData';
 
+const Stack = createNativeStackNavigator();
+
 let listToLoad = null;
 const defaultList = {
-  title: 'Sample List',
+  title: 'defaultList',
   todos: [
     {
       text: 'Wash dishes',
@@ -46,7 +48,6 @@ function HomeScreen({navigation}) {
   );
 }
 
-const Stack = createNativeStackNavigator();
 const STORAGE_KEY = '@LISTS';
 
 class App extends Component {
@@ -101,34 +102,25 @@ class App extends Component {
     }
   };
 
-  async componentWillUnmount() {
+  async componentWillUnmount() {}
 
-  }
-  
   async componentDidMount() {
     await this.clearStorage();
     await this.readData();
   }
 
   render() {
-    console.log('Render Called');
+    console.log('App Render Called');
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen
-            name="ListView"
-          >
-            {() => <ListView lists={this.state.lists} />}
-          </Stack.Screen>
-          <Stack.Screen name="SampleList" component={List} />
+          <Stack.Screen name="My Todo Lists" component={ListView} />
+
+          <Stack.Screen name="List" component={List}/>
         </Stack.Navigator>
       </NavigationContainer>
     );
   }
-}
-
-function createListView(lists) {
-  return (<ListView lists={lists}/>);
 }
 
 export default App;
