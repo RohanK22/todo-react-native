@@ -10,44 +10,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import retrieveDataByKey from './db/retrieveData';
 import storeDataByKey from './db/storeData';
 
+import defaultList from './db/defaultList';
+
 const Stack = createNativeStackNavigator();
 
 let listToLoad = null;
-const defaultList = {
-  title: 'defaultList',
-  todos: [
-    {
-      text: 'Wash dishes',
-      isCompleted: false,
-    },
-    {
-      text: 'Take out trash',
-      isCompleted: false,
-    },
-    {
-      text: 'Get Veggies',
-      isCompleted: false,
-    },
-  ],
-  textInputValue: '',
-};
-
-function HomeScreen({navigation}) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() =>
-          navigation.navigate('SampleList', {
-            list: listToLoad,
-          })
-        }
-      />
-    </View>
-  );
-}
-
 const STORAGE_KEY = '@LISTS';
 
 class App extends Component {
